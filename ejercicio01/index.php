@@ -1,143 +1,112 @@
-<?php
-$nombre = null;
-$empresa = null;
-$email = null;
-$telefono = null;
-$motivo = null;
-$mensaje = null;
-
-$errores = array();
-
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-
-    if (isset($_POST["nombre"])) {
-        $nombre = $_POST["nombre"];
-    }
-
-    if (isset($_POST["empresa"])) {
-        $empresa = $_POST["empresa"];
-    }
-
-    if (isset($_POST["email"])) {
-        $email = $_POST["email"];
-    }
-
-    if (isset($_POST["telefono"])) {
-        $telefono = $_POST["telefono"];
-    }
-
-    if (isset($_POST["motivo"])) {
-        $motivo = $_POST["motivo"];
-    }
-
-    if (isset($_POST["mensaje"])) {
-        $mensaje = $_POST["mensaje"];
-    }
-
-    if (empty($nombre)) {
-        $errores[] = "El nombre es obligatorio.";
-    }
-
-    if (empty($email)) {
-        $errores[] = "El email es obligatorio.";
-    } else {
-        if (filter_var($email, FILTER_VALIDATE_EMAIL) == false) {
-            $errores[] = "El email no es valido.";
-        }
-    }
-
-    if (empty($motivo)) {
-        $errores[] = "Selecciona un motivo.";
-    }
-
-    if (empty($mensaje)) {
-        $errores[] = "El mensaje no puede estar vacio.";
-    }
-}
-?>
 <!DOCTYPE html>
-<html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <title>Ejercicio 1 - Formulario</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="estilos.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ejercicio1</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+<link rel="stylesheet" href="ejerciciosPHP/estilo.css">
 </head>
+
 <body>
 
-<div class="container">
-    <h2>Formulario de Contacto</h2>
-    <br>
+<?php
+$Nombre = ($_POST['Nombre'] ?? '');
+$Empresa = ($_POST['Empresa'] ?? '');
+$Correo = ($_POST['Correo'] ?? '');
+$Telefono = ($_POST['Telefono'] ?? '');
+$Motivo = ($_POST['Motivo'] ?? '');
+$Mensaje = ($_POST['Mensaje'] ?? '');
 
-    <?php if ($_SERVER["REQUEST_METHOD"] == "POST" && count($errores) == 0): ?>
+$error = "";
+$envio = false;
+$mensajeresum = "";
 
-        <div class="alert alert-success">
-            <h4>Consulta enviada con exito</h4>
-            <p><strong>Nombre:</strong> <?php echo $nombre; ?></p>
-            <p><strong>Empresa:</strong> <?php echo $empresa; ?></p>
-            <p><strong>Email:</strong> <?php echo $email; ?></p>
-            <p><strong>Telefono:</strong> <?php echo $telefono; ?></p>
-            <p><strong>Motivo:</strong> <?php echo $motivo; ?></p>
-            <p><strong>Mensaje:</strong> <?php echo $mensaje; ?></p>
-        </div>
-        <a href="index.php" class="btn btn-secondary">Volver al formulario</a>
+if(empty($Nombre) || empty($Empresa) || empty($Correo) || empty($Telefono) || empty($Motivo) || empty($Mensaje)){
+$error .= "Todos los campos son obligatorios";
+} else {
+  $envio .= "Todos los campos son correctos";
+  $mensajeresum .= "Resumen de los datos " . $Nombre . "<br>"; 
+  $mensajeresum .= "Resumen de los datos " . $Empresa . "<br>"; 
+  $mensajeresum .= "Resumen de los datos " . $Correo . "<br>";
+  $mensajeresum .= "Resumen de los datos " . $Telefono . "<br>";
+  $mensajeresum .= "Resumen de los datos " . $Motivo . "<br>";
+  $mensajeresum .= "Resumen de los datos " . $Mensaje . "<br>";
+}
 
-    <?php else: ?>
+    
 
-        <?php if (count($errores) > 0): ?>
-            <div class="alert alert-danger">
-                <ul>
-                    <?php foreach ($errores as $err): ?>
-                        <li><?php echo $err; ?></li>
-                    <?php endforeach; ?>
-                </ul>
-            </div>
-        <?php endif; ?>
+if (empty($Nombre)) {
+        $error .= "El nombre es obligatorio \n <br>";
+    }
+if (empty($Empresa)) {
+        $error .= "LA empresa es obligatorio \n <br>";
+    }
+if (empty($Correo)) {
+        $error .= "El correo es obligatorio \n <br>";
+    }
+if (empty($Telefono)) {
+        $error .= "El telefono es obligatorio \n <br>";
+    }
+if (empty($Motivo)) {
+        $error .= "El motivo de la consulta es obligatorio \n <br>";
+    }
+if (empty($Mensaje)) {
+        $error .= "El mensaje es obligatorio \n <br>";
+    }
 
-        <form action="index.php" method="POST">
-            
-            <div class="mb-3">
-                <label for="nombre" class="form-label">Nombre y apellidos *</label>
-                <input type="text" class="form-control" name="nombre" id="nombre" value="<?php echo $nombre; ?>">
-            </div>
+if (empty($error)) {
+        $exito = true;
+    }
 
-            <div class="mb-3">
-                <label for="empresa" class="form-label">Empresa</label>
-                <input type="text" class="form-control" name="empresa" id="empresa" value="<?php echo $empresa; ?>">
-            </div>
 
-            <div class="mb-3">
-                <label for="email" class="form-label">Correo electronico *</label>
-                <input type="text" class="form-control" name="email" id="email" value="<?php echo $email; ?>">
-            </div>
+?>
 
-            <div class="mb-3">
-                <label for="telefono" class="form-label">Telefono</label>
-                <input type="text" class="form-control" name="telefono" id="telefono" value="<?php echo $telefono; ?>">
-            </div>
 
-            <div class="mb-3">
-                <label for="motivo" class="form-label">Motivo de la consulta *</label>
-                <select class="form-select" name="motivo" id="motivo">
-                    <option value="">-- Seleccionar --</option>
-                    <option value="Informacion" <?php if($motivo == 'Informacion') { echo 'selected'; } ?>>Informacion</option>
-                    <option value="Presupuesto" <?php if($motivo == 'Presupuesto') { echo 'selected'; } ?>>Presupuesto</option>
-                    <option value="Soporte" <?php if($motivo == 'Soporte') { echo 'selected'; } ?>>Soporte</option>
-                </select>
-            </div>
 
-            <div class="mb-3">
-                <label for="mensaje" class="form-label">Mensaje *</label>
-                <textarea class="form-control" name="mensaje" id="mensaje" rows="3"><?php echo $mensaje; ?></textarea>
-            </div>
+<div class = "container-sm mt-5">
+<form method="POST">
+  <div class="mb-3">
+    <label for="Nombre" class="form-label">Nombre<span>*</span></label>
+    <input type="text" class="form-control" id="Nombre" name="Nombre" aria-describedby="Nombre">
+  <div class="mb-3">
+    <label for="Empresa" class="form-label">Empresa<span>*</span></label>
+    <input type="text" class="form-control" id="Empresa" name="Empresa">
+  </div>
+  <div class="mb-3">
+    <label for="Correo" class="form-label">Email <span>*</span></label>
+    <input type="Ematextil" class="form-control" id="Correo" name="Correo">
+  </div>
+  <div class="mb-3">
+    <label for="Telefono" class="form-label">Teléfono<span>*</span></label>
+    <input type="text" class="form-control" id="Telefono" name="Telefono">
+  </div>
+  <div class="mb-3">
+    <label for="Motivo" class="form-label">Motivo de la consulta<span>*</span></label>
+    <input type="text" class="form-control" id="Motivo" name="Motivo">
+  </div>
+  <div class="mb-3">
+    <label for="Mensaje" class="form-label">Mensaje<span>*</span></label>
+    <input type="text" class="form-control" id="Mensaje" name="Mensaje">
+  </div>
+  
+    <button type="submit" class="btn btn-primary">Enviar</button> 
+</form>
+<br>
+<br>
 
-            <button type="submit" class="btn btn-dark">Enviar</button>
+<?php
 
-        </form>
+if(!empty($error)):
+  echo
+  '<div class="alert alert-danger" role="alert">' .$error .'</div>';
+else:
+  echo
+  '<div class="alert alert-success" role="alert">' . $envio .'</div>';
+  echo
+    '<div class="alert alert-success" role="alert">' . $mensajeresum .'</div>';
 
-    <?php endif; ?>
-
+endif;
+?>
 </div>
-
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
 </body>
 </html>
