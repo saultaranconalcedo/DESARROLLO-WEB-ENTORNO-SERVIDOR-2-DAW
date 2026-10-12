@@ -1,0 +1,23 @@
+body {
+    background-color: #f5f7fa;
+}
+
+.metric-label {
+    color: #667085;
+    font-size: 0.9rem;
+    margin-bottom: 0.4rem;
+}
+
+.metric-value {
+    color: #1d2939;
+    font-size: 1.8rem;
+    font-weight: 600;
+}
+
+.metric-money {
+    font-size: 1.25rem;
+}
+
+.card {
+    border-color: #e6eaf0;
+}
