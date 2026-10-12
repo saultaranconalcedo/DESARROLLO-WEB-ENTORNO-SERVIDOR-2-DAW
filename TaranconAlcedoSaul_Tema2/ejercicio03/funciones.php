@@ -1,37 +1,24 @@
 <?php
-const MONEDA = "€";
-
-function calcularCoste($horas, $precioHora)
-{
-    return $horas * $precioHora;
+// Multiplica horas por precio
+function calcularCoste($horas, $precio) {
+    return $horas * $precio;
 }
 
-function calcularHorasRestantes($horasEstimadas, $horasRealizadas)
-{
-    return $horasEstimadas - $horasRealizadas;
+// Resto estimadas menos realizadas
+function calcularHorasRestantes($est, $real) {
+    return $est - $real;
 }
 
-function calcularPorcentaje($horasEstimadas, $horasRealizadas)
-{
-    if ($horasEstimadas <= 0) {
-        return 0;
+// Regla de tres simple para porcentaje
+function calcularPorcentaje($real, $est) {
+    if ($est == 0) return 0; // Para que no de error si pongo 0
+    return ($real / $est) * 100;
+}
+
+// Reviso si el coste supera el presupuesto maximo
+function comprobarPresupuesto($cActual, $pMax) {
+    if ($cActual > $pMax) {
+        return "ATENCIÓN: EL PROYECTO HA SUPERADO EL PRESUPUESTO";
     }
-
-    return $horasRealizadas / $horasEstimadas * 100;
+    return "PROYECTO DENTRO DEL PRESUPUESTO";
 }
-
-function comprobarPresupuesto($costeActual, $presupuestoMaximo)
-{
-    return $costeActual <= $presupuestoMaximo;
-}
-
-function escapar($texto)
-{
-    return htmlspecialchars((string) $texto, ENT_QUOTES, "UTF-8");
-}
-
-function formatoEuros($cantidad)
-{
-    return number_format($cantidad, 2, ",", ".") . " " . MONEDA;
-}
-?>

@@ -1,101 +1,57 @@
 <?php
-const MONEDA = "€";
 
-function calcularCoste($horas, $precioHora)
-{
-    return $horas * $precioHora;
+// Multiplico horas por precio
+function calcularCosteProyecto($horas, $precio) {
+    return $horas * $precio;
 }
 
-function calcularPorcentaje($horasEstimadas, $horasRealizadas)
-{
-    if ($horasEstimadas <= 0) {
-        return 0;
-    }
-
-    return $horasRealizadas / $horasEstimadas * 100;
+// Porcentaje consumido de horas
+function calcularPorcentajeEjecucion($real, $est) {
+    if ($est == 0) return 0;
+    return ($real / $est) * 100;
 }
 
-function comprobarPresupuesto($proyecto)
-{
-    $costeActual = calcularCoste($proyecto["horas_realizadas"], $proyecto["precio_hora"]);
-
-    return $costeActual <= $proyecto["presupuesto"];
+// Devuelve true si nos pasamos del presupuesto
+function tieneDesviacion($p) {
+    return calcularCosteProyecto($p['horas_realizadas'], $p['precio_hora']) > $p['presupuesto'];
 }
 
-function obtenerProyectosActivos($proyectos)
-{
-    $proyectosActivos = array();
-
-    foreach ($proyectos as $proyecto) {
-        if ($proyecto["estado"] !== "Finalizado") {
-            $proyectosActivos[] = $proyecto;
+// Filtra los proyectos que superaron las horas previstas
+function obtenerProyectosExcedidosHoras($proyectos) {
+    $excedidos = [];
+    foreach ($proyectos as $p) {
+        if ($p['horas_realizadas'] > $p['horas_estimadas']) {
+            $excedidos[] = $p;
         }
     }
-
-    return $proyectosActivos;
+    return $excedidos;
 }
 
-function obtenerEstadisticas($proyectos)
-{
-    $estadisticas = array(
-        "cantidad_activos" => 0,
-        "horas_estimadas" => 0,
-        "horas_realizadas" => 0,
-        "coste_previsto" => 0,
-        "coste_actual" => 0,
-        "dentro_presupuesto" => 0,
-        "con_desviacion" => 0
-    );
-
-    // Las cifras del panel se calculan solo para proyectos que todavía no están finalizados.
-    foreach (obtenerProyectosActivos($proyectos) as $proyecto) {
-        $estadisticas["cantidad_activos"]++;
-        $estadisticas["horas_estimadas"] += (float) $proyecto["horas_estimadas"];
-        $estadisticas["horas_realizadas"] += (float) $proyecto["horas_realizadas"];
-        $estadisticas["coste_previsto"] += calcularCoste($proyecto["horas_estimadas"], $proyecto["precio_hora"]);
-        $estadisticas["coste_actual"] += calcularCoste($proyecto["horas_realizadas"], $proyecto["precio_hora"]);
-
-        if (comprobarPresupuesto($proyecto)) {
-            $estadisticas["dentro_presupuesto"]++;
-        } else {
-            $estadisticas["con_desviacion"]++;
-        }
+// Busca un proyecto por su ID 
+function buscarProyectoPorId($proyectos, $id) {
+    foreach ($proyectos as $p) {
+        if ($p['id'] == $id) return $p;
     }
-
-    return $estadisticas;
-}
-
-function buscarProyecto($proyectos, $id)
-{
-    foreach ($proyectos as $proyecto) {
-        if ($proyecto["id"] === $id) {
-            return $proyecto;
-        }
-    }
-
     return null;
 }
 
-function obtenerProyectosConHorasSuperadas($proyectos)
-{
-    $proyectosConHorasSuperadas = array();
+// Genera todas las estadisticas generales
+function obtenerEstadisticas($proyectos) {
+    $activos = $hEst = $hReal = $cPrev = $cAct = $dentro = $desviados = 0;
 
-    foreach ($proyectos as $proyecto) {
-        if ($proyecto["horas_realizadas"] > $proyecto["horas_estimadas"]) {
-            $proyectosConHorasSuperadas[] = $proyecto;
+    foreach ($proyectos as $p) {
+        if ($p['estado'] != 'Finalizado') $activos++;
+        $hEst += $p['horas_estimadas'];
+        $hReal += $p['horas_realizadas'];
+        $cPrev += calcularCosteProyecto($p['horas_estimadas'], $p['precio_hora']);
+        $cAct += calcularCosteProyecto($p['horas_realizadas'], $p['precio_hora']);
+
+        if (tieneDesviacion($p)) {
+            $desviados++;
+        } else {
+            $dentro++;
         }
     }
 
-    return $proyectosConHorasSuperadas;
+    return compact('activos', 'hEst', 'hReal', 'cPrev', 'cAct', 'dentro', 'desviados');
 }
-
-function escapar($texto)
-{
-    return htmlspecialchars((string) $texto, ENT_QUOTES, "UTF-8");
-}
-
-function formatoEuros($cantidad)
-{
-    return number_format($cantidad, 2, ",", ".") . " " . MONEDA;
-}
-?>

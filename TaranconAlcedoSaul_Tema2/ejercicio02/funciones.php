@@ -1,38 +1,16 @@
 <?php
-const MONEDA = "€";
-
-function calcularBrutoPorPaga($brutoAnual, $numeroPagas)
-{
-    return $brutoAnual / $numeroPagas;
+// Funcion para sacar el salario neto mensual
+function calcularNeto($brutoAnual, $pagas, $retencion, $complementos) {
+    // Cuanto cobra al mes en bruto
+    $bMensual = $brutoAnual / $pagas;
+    // Lo que le descuentan de IRPF al mes
+    $imoret = $bMensual * ($retencion / 100);
+   // Resto IRPF y sumo los complementos
+    $neto = ($bMensual - $imoret) + $complementos;
+    // Devuelvo los resultados en un array
+    return [
+        'b_mensual' => $bMensual,
+        'retencion' => $imoret,
+        'neto' => $neto
+    ];
 }
-
-function calcularRetencion($brutoPorPaga, $porcentajeRetencion)
-{
-    return $brutoPorPaga * $porcentajeRetencion / 100;
-}
-
-function calcularNeto($brutoPorPaga, $porcentajeRetencion, $complementosMensuales)
-{
-    $retencion = calcularRetencion($brutoPorPaga, $porcentajeRetencion);
-
-    return $brutoPorPaga - $retencion + $complementosMensuales;
-}
-
-function calcularNetoMensual($brutoAnual, $porcentajeRetencion, $complementosMensuales)
-{
-    $brutoMensual = $brutoAnual / 12;
-    $retencionMensual = calcularRetencion($brutoMensual, $porcentajeRetencion);
-
-    return $brutoMensual - $retencionMensual + $complementosMensuales;
-}
-
-function escapar($texto)
-{
-    return htmlspecialchars((string) $texto, ENT_QUOTES, "UTF-8");
-}
-
-function formatoEuros($cantidad)
-{
-    return number_format($cantidad, 2, ",", ".") . " " . MONEDA;
-}
-?>
