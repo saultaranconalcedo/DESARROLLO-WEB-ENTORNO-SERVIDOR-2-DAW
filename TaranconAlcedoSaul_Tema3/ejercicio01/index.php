@@ -17,9 +17,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $cp = trim($_POST['cp'] ?? '');
     $ciudad = trim($_POST['ciudad'] ?? '');
 
-    // --- COMPROBACIONES EN EL SERVIDOR ---
+    //COMPROBACIONES
 
-    // 1. Que los campos obligatorios no esten vacios
+    // Que los campos obligatorios no esten vacios
     if (empty($nombre)) {
         $errores[] = "El Nombre y Apellidos es obligatorio.";
     }
@@ -36,31 +36,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $errores[] = "El Código Postal es obligatorio.";
     }
 
-    // 2. Que el email tenga arroba y punto
+    // Que el email tenga arroba y punto
     if (!empty($email) && !filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $errores[] = "El Correo electrónico no tiene un formato válido.";
     }
 
-    // 3. Que el CP sean exactamente 5 numeros
+    // Que el CP sean exactamente 5 numeros
     if (!empty($cp) && (!ctype_digit($cp) || strlen($cp) !== 5)) {
         $errores[] = "El Código Postal debe tener 5 números.";
     }
 
-    // 4. Que el telefono sean solo numeros
+    //Que el telefono sean solo numeros
     if (!empty($telefono) && !preg_match('/^[0-9]{9,15}$/', $telefono)) {
         $errores[] = "El Teléfono debe contener solo números.";
     }
-
-    // Si la lista de errores sigue vacia, ¡todo perfecto!
     if (empty($errores)) {
         $exito = true;
     }
 }
 ?>
 <!DOCTYPE html>
-<html lang="es">
 <head>
-    <meta charset="UTF-8">
     <title>Ejercicio 1 - Alta de Clientes</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="estilos.css">
@@ -102,7 +98,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 </div>
             <?php endif; ?>
 
-            <!-- Formulario POST con inputs HTML5 -->
             <form method="POST" action="index.php">
                 <div class="row">
                     <div class="col-md-6 mb-3">

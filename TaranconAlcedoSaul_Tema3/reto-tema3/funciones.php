@@ -1,6 +1,5 @@
 <?php
 
-// TODO: Conectar con una base de datos MySQL mediante PDO en una proxima version
 
 // Valida todos los datos del alta de un producto
 function validarProducto($datos) {

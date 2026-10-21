@@ -1,7 +1,5 @@
 <?php
 
-// TODO: guardar las incidencias en una base de datos MySQL en el futuro.
-
 // Funcion que revisa si el formulario tiene fallos
 function validarFormulario($datos) {
     $errores = [];

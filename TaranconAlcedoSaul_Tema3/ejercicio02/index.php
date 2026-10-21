@@ -10,10 +10,10 @@ $resultados = [];
 // Recorro todos los clientes uno a uno
 foreach ($clientes as $c) {
     if ($termino === "") {
-        // Si no han buscado nada, me quedo con todos
+        // Si no han buscado nada
         $resultados[] = $c;
     } else {
-        // Compruebo si el texto esta en el nombre, empresa o email (sin importar mayusculas)
+        // Compruebo si el texto esta en el nombre, empresa o email
         if (
             stripos($c['nombre'], $termino) !== false ||
             stripos($c['empresa'], $termino) !== false ||
@@ -25,9 +25,7 @@ foreach ($clientes as $c) {
 }
 ?>
 <!DOCTYPE html>
-<html lang="es">
 <head>
-    <meta charset="UTF-8">
     <title>Ejercicio 2 - Buscador de Clientes</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="estilos.css">
@@ -83,7 +81,6 @@ foreach ($clientes as $c) {
                     </tbody>
                 </table>
             <?php else: ?>
-                <!-- Frase exacta requerida si no hay coincidencias -->
                 <div class="alert alert-warning mt-3">
                     No se han encontrado clientes.
                 </div>

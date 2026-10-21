@@ -1,4 +1,5 @@
 <?php
+
 // Necesito la lista de datos y las funciones
 require_once 'datos.php';
 require_once 'funciones.php';
@@ -10,9 +11,7 @@ $id = $_GET['id'] ?? null;
 $producto = obtenerProductoPorId($productos, $id);
 ?>
 <!DOCTYPE html>
-<html lang="es">
 <head>
-    <meta charset="UTF-8">
     <title>Ficha del Producto</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="estilos.css">
@@ -20,6 +19,8 @@ $producto = obtenerProductoPorId($productos, $id);
 <body class="bg-light p-4">
 
 <div class="container" style="max-width: 600px;">
+
+
     <!-- Si encontre el producto muestro su ficha -->
     <?php if ($producto): ?>
         <div class="card shadow-sm border-primary">
@@ -40,6 +41,8 @@ $producto = obtenerProductoPorId($productos, $id);
             </div>
         </div>
     <?php else: ?>
+
+
         <!-- Si han puesto un ID inventado muestro alerta de error -->
         <div class="alert alert-danger">
             <h4>Producto no encontrado</h4>
