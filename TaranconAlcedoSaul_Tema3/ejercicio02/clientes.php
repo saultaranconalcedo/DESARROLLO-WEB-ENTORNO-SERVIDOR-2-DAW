@@ -1,5 +1,5 @@
 <?php
-// Lista de clientes simulada en un array de arrays
+// Array con los clientes iniciales que pide el ejercicio
 $clientes = [
     [
         'id' => 1,

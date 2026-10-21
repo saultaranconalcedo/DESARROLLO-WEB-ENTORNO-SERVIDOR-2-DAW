@@ -1,9 +1,12 @@
 <?php
+// Necesito la lista de datos y las funciones
 require_once 'datos.php';
 require_once 'funciones.php';
 
-// Coger ID recibido por GET
+// Cojo el ID que viene en la URL por GET (ejemplo: detalle.php?id=2)
 $id = $_GET['id'] ?? null;
+
+// Busco el producto especifico en la lista con mi funcion
 $producto = obtenerProductoPorId($productos, $id);
 ?>
 <!DOCTYPE html>
@@ -17,6 +20,7 @@ $producto = obtenerProductoPorId($productos, $id);
 <body class="bg-light p-4">
 
 <div class="container" style="max-width: 600px;">
+    <!-- Si encontre el producto muestro su ficha -->
     <?php if ($producto): ?>
         <div class="card shadow-sm border-primary">
             <div class="card-header bg-primary text-white">
@@ -36,9 +40,10 @@ $producto = obtenerProductoPorId($productos, $id);
             </div>
         </div>
     <?php else: ?>
+        <!-- Si han puesto un ID inventado muestro alerta de error -->
         <div class="alert alert-danger">
             <h4>Producto no encontrado</h4>
-            <p>El identificador proporcionado no existe en la base de datos.</p>
+            <p>El producto especificado no existe.</p>
             <a href="productos.php" class="btn btn-secondary">Volver al catálogo</a>
         </div>
     <?php endif; ?>

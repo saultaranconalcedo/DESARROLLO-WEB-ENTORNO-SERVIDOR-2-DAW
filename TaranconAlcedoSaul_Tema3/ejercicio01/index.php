@@ -1,13 +1,13 @@
 <?php
-// Variables vacias al principio para no dar avisos/warnings
+// Variables vacias para que PHP no de error al cargar la pagina por primera vez
 $nombre = $dni = $empresa = $email = $telefono = $direccion = $cp = $ciudad = "";
 $errores = [];
 $exito = false;
 
-// Solo se ejecuta si le dan al boton de enviar (metodo POST)
+// Solo se ejecuta esto si le han dado al boton de enviar (POST)
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-    // Recojo los datos y limpiecito espacios con trim
+    // Recojo los datos del formulario y limpio espacios raros con trim
     $nombre = trim($_POST['nombre'] ?? '');
     $dni = trim($_POST['dni'] ?? '');
     $empresa = trim($_POST['empresa'] ?? '');
@@ -17,9 +17,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $cp = trim($_POST['cp'] ?? '');
     $ciudad = trim($_POST['ciudad'] ?? '');
 
-    // --- VALIDACIONES DEL SERVIDOR (PHP) ---
+    // --- COMPROBACIONES EN EL SERVIDOR ---
 
-    // 1. Campos obligatorios
+    // 1. Que los campos obligatorios no esten vacios
     if (empty($nombre)) {
         $errores[] = "El Nombre y Apellidos es obligatorio.";
     }
@@ -36,22 +36,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $errores[] = "El Código Postal es obligatorio.";
     }
 
-    // 2. Formato de Email valido
+    // 2. Que el email tenga arroba y punto
     if (!empty($email) && !filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $errores[] = "El Correo electrónico no tiene un formato válido (ejemplo: usuario@dominio.com).";
+        $errores[] = "El Correo electrónico no tiene un formato válido.";
     }
 
-    // 3. Codigo Postal exactamente 5 digitos
+    // 3. Que el CP sean exactamente 5 numeros
     if (!empty($cp) && (!ctype_digit($cp) || strlen($cp) !== 5)) {
-        $errores[] = "El Código Postal debe tener exactamente 5 números.";
+        $errores[] = "El Código Postal debe tener 5 números.";
     }
 
-    // 4. Telefono valido (numeros de 9 a 15 digitos)
+    // 4. Que el telefono sean solo numeros
     if (!empty($telefono) && !preg_match('/^[0-9]{9,15}$/', $telefono)) {
-        $errores[] = "El Teléfono debe contener solo números (mínimo 9 dígitos).";
+        $errores[] = "El Teléfono debe contener solo números.";
     }
 
-    // Si la lista de errores esta vacia, ¡todo correcto!
+    // Si la lista de errores sigue vacia, ¡todo perfecto!
     if (empty($errores)) {
         $exito = true;
     }
@@ -62,7 +62,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <head>
     <meta charset="UTF-8">
     <title>Ejercicio 1 - Alta de Clientes</title>
-    <!-- CSS de Bootstrap por CDN para que quede bonito sin tocar CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="estilos.css">
 </head>
@@ -75,10 +74,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </div>
         <div class="card-body">
 
-            <!-- SI HAY ERRORES: Muestro la caja roja -->
+            <!-- Si hay errores muestro la caja roja -->
             <?php if (!empty($errores)): ?>
                 <div class="alert alert-danger">
-                    <h5 class="alert-heading">¡Atención! Revisa los siguientes errores:</h5>
+                    <h5 class="alert-heading">Revisa estos errores:</h5>
                     <ul class="mb-0">
                         <?php foreach ($errores as $err): ?>
                             <li><?= htmlspecialchars($err) ?></li>
@@ -87,10 +86,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 </div>
             <?php endif; ?>
 
-            <!-- SI TODO ESTA BIEN: Muestro la tarjeta verde de exito -->
+            <!-- Si todo esta bien muestro el cartel verde de exito -->
             <?php if ($exito): ?>
                 <div class="alert alert-success">
-                    <h4 class="alert-heading text-uppercase font-monospace">CLIENTE REGISTRADO CORRECTAMENTE</h4>
+                    <h4 class="alert-heading fw-bold">CLIENTE REGISTRADO CORRECTAMENTE</h4>
                     <hr>
                     <p class="mb-1"><strong>Nombre:</strong> <?= htmlspecialchars($nombre) ?></p>
                     <p class="mb-1"><strong>DNI/NIE:</strong> <?= htmlspecialchars($dni) ?></p>
@@ -103,7 +102,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 </div>
             <?php endif; ?>
 
-            <!-- FORMULARIO CON TIPOS HTML5 -->
+            <!-- Formulario POST con inputs HTML5 -->
             <form method="POST" action="index.php">
                 <div class="row">
                     <div class="col-md-6 mb-3">

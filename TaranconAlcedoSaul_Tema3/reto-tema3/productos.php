@@ -2,12 +2,12 @@
 require_once 'datos.php';
 require_once 'funciones.php';
 
-// Recojo parametros del buscador GET
+// Cojo los parametros del buscador GET exactos que pide el profesor
 $nombre = trim($_GET['nombre'] ?? '');
 $categoria = trim($_GET['categoria'] ?? '');
 $precio_max = trim($_GET['precio_max'] ?? '');
 
-// Filtro la lista
+// Filtro la lista con la funcion de funciones.php
 $lista = filtrarProductos($productos, $nombre, $categoria, $precio_max);
 ?>
 <!DOCTYPE html>
@@ -29,7 +29,7 @@ $lista = filtrarProductos($productos, $nombre, $categoria, $precio_max);
         </div>
     </div>
 
-    <!-- BUSCADOR CON GET -->
+    <!-- Buscador GET -->
     <div class="card p-3 mb-4 shadow-sm">
         <h5 class="card-title mb-3">Buscador de Productos</h5>
         <form method="GET" action="productos.php" class="row g-2">
@@ -51,12 +51,9 @@ $lista = filtrarProductos($productos, $nombre, $categoria, $precio_max);
                 <button type="submit" class="btn btn-primary w-100">Buscar</button>
             </div>
         </form>
-        <div class="mt-2">
-            <a href="productos.php" class="text-decoration-none small text-muted">Limpiar filtros</a>
-        </div>
     </div>
 
-    <!-- TABLA DE PRODUCTOS -->
+    <!-- Tabla de resultados -->
     <?php if (!empty($lista)): ?>
         <table class="table table-bordered table-hover bg-white shadow-sm">
             <thead class="table-dark">
@@ -78,6 +75,7 @@ $lista = filtrarProductos($productos, $nombre, $categoria, $precio_max);
                         <td><?= number_format($p['precio'], 2) ?> €</td>
                         <td><?= $p['stock'] ?></td>
                         <td>
+                            <!-- Enlace obligatorio Ver detalle con GET -->
                             <a href="detalle.php?id=<?= $p['id'] ?>" class="btn btn-info btn-sm text-white">Ver detalle</a>
                         </td>
                     </tr>

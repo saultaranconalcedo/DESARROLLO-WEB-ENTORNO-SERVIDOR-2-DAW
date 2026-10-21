@@ -1,46 +1,39 @@
 <?php
 
-// TODO: Conectar con una base de datos MySQL en el futuro
+// TODO: Conectar con una base de datos MySQL mediante PDO en una proxima version
 
-/**
- * Valida los datos del formulario de alta de producto
- */
+// Valida todos los datos del alta de un producto
 function validarProducto($datos) {
     $errores = [];
 
-    // 1. Nombre obligatorio
     if (empty(trim($datos['nombre'] ?? ''))) {
         $errores[] = "El Nombre del producto es obligatorio.";
     }
 
-    // 2. Categoria obligatoria
     if (empty(trim($datos['categoria'] ?? ''))) {
         $errores[] = "La Categoría es obligatoria.";
     }
 
-    // 3. Precio numerico y mayor que cero
+    // Precio numerico y mayor que cero
     $precio = $datos['precio'] ?? '';
     if ($precio === '' || !is_numeric($precio) || (float)$precio <= 0) {
-        $errores[] = "El Precio debe ser un número válido mayor que cero.";
+        $errores[] = "El Precio debe ser un número mayor que cero.";
     }
 
-    // 4. Stock entero y mayor o igual que cero
+    // Stock entero mayor o igual que cero
     $stock = $datos['stock'] ?? '';
-    if ($stock === '' || !filter_var($stock, FILTER_VALIDATE_INT, ["options" => ["min_range" => 0]]) && $stock != 0) {
+    if ($stock === '' || !is_numeric($stock) || (int)$stock < 0) {
         $errores[] = "El Stock debe ser un número entero mayor o igual que cero.";
     }
 
-    // 5. Descripcion obligatoria
     if (empty(trim($datos['descripcion'] ?? ''))) {
-        $errores[] = "La Descripción del producto es obligatoria.";
+        $errores[] = "La Descripción es obligatoria.";
     }
 
     return $errores;
 }
 
-/**
- * Busca un producto por su ID
- */
+// Busca un producto unico por su ID
 function obtenerProductoPorId($productos, $id) {
     foreach ($productos as $p) {
         if ($p['id'] == $id) {
@@ -50,9 +43,7 @@ function obtenerProductoPorId($productos, $id) {
     return null;
 }
 
-/**
- * Filtra los productos segun los criterios de busqueda GET
- */
+// Filtra productos segun los parametros de la busqueda por GET
 function filtrarProductos($productos, $nombre, $categoria, $precioMax) {
     $filtrados = [];
 

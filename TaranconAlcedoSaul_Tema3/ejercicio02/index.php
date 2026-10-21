@@ -1,21 +1,19 @@
 <?php
-// Traigo la lista de clientes desde clientes.php
+// Traigo la lista de clientes desde el otro archivo
 require_once 'clientes.php';
 
-// Recojo lo que han escrito en el buscador por GET
-// Si no han escrito nada, se queda en blanco
-$termino = trim($_GET['termino'] ?? '');
+// Cojo el texto que han puesto en el buscador por GET (viene en la URL)
+$termino = trim($_GET['termino'] ?? $_GET['empresa'] ?? '');
 
-// Lista donde guardaremos los clientes que coincidan
 $resultados = [];
 
-// Recorro todos los clientes para ver si coinciden con la busqueda
+// Recorro todos los clientes uno a uno
 foreach ($clientes as $c) {
     if ($termino === "") {
-        // Si no se ha escrito nada, mostramos todos los clientes
+        // Si no han buscado nada, me quedo con todos
         $resultados[] = $c;
     } else {
-        // Busco la coincidencia en Nombre, Empresa o Email (sin importar mayusculas/minusculas)
+        // Compruebo si el texto esta en el nombre, empresa o email (sin importar mayusculas)
         if (
             stripos($c['nombre'], $termino) !== false ||
             stripos($c['empresa'], $termino) !== false ||
@@ -31,7 +29,6 @@ foreach ($clientes as $c) {
 <head>
     <meta charset="UTF-8">
     <title>Ejercicio 2 - Buscador de Clientes</title>
-    <!-- Bootstrap CDN para los estilos -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="estilos.css">
 </head>
@@ -44,31 +41,27 @@ foreach ($clientes as $c) {
         </div>
         <div class="card-body">
 
-            <!-- FORMULARIO DE BÚSQUEDA (Método GET) -->
+            <!-- Buscador por GET -->
             <form method="GET" action="index.php" class="row g-2 mb-3">
                 <div class="col-sm-9">
-                    <input type="text" name="termino" class="form-control" placeholder="Buscar por Nombre, Empresa o Email..." value="<?= htmlspecialchars($termino) ?>">
+                    <input type="text" name="termino" class="form-control" placeholder="Nombre, empresa o email..." value="<?= htmlspecialchars($termino) ?>">
                 </div>
                 <div class="col-sm-3">
                     <button type="submit" class="btn btn-success w-100">Buscar</button>
                 </div>
             </form>
 
-            <!-- Enlace para "Ver todos los clientes" sin filtro -->
+            <!-- Enlace obligatorio para ver la lista completa -->
             <div class="mb-3">
                 <a href="index.php" class="btn btn-outline-secondary btn-sm">Ver todos los clientes</a>
             </div>
 
-            <!-- RESULTADOS -->
-            <h5 class="mt-4">RESULTADOS DE BÚSQUEDA</h5>
+            <h5>RESULTADOS DE BÚSQUEDA</h5>
             <?php if ($termino !== ""): ?>
-                <p class="text-muted"><strong>Criterio de búsqueda:</strong> <?= htmlspecialchars($termino) ?></p>
-            <?php else: ?>
-                <p class="text-muted"><strong>Mostrando:</strong> Todos los clientes</p>
+                <p class="text-muted"><strong>Criterio:</strong> <?= htmlspecialchars($termino) ?></p>
             <?php endif; ?>
 
             <?php if (!empty($resultados)): ?>
-                <!-- Tabla con los resultados -->
                 <table class="table table-bordered table-striped mt-3">
                     <thead class="table-dark">
                         <tr>
@@ -90,7 +83,7 @@ foreach ($clientes as $c) {
                     </tbody>
                 </table>
             <?php else: ?>
-                <!-- Si la busqueda no devuelve nada -->
+                <!-- Frase exacta requerida si no hay coincidencias -->
                 <div class="alert alert-warning mt-3">
                     No se han encontrado clientes.
                 </div>

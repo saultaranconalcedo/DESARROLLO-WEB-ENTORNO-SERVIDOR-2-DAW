@@ -1,8 +1,7 @@
 <?php
-// Incluyo las funciones necesarias
+// Cargo las funciones
 require_once 'funciones.php';
 
-// Variables iniciales
 $datos = [
     'nombre' => '',
     'email' => '',
@@ -15,14 +14,14 @@ $datos = [
 $errores = [];
 $incidenciaRegistrada = null;
 
-// Solo se procesa si se envia por POST
+// Si envian el formulario
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $datos = $_POST;
 
-    // 1. Validar datos mediante la funcion
+    // Valido todo usando la funcion de funciones.php
     $errores = validarFormulario($datos);
 
-    // 2. Si no hay errores, generar la incidencia
+    // Si todo esta limpio creo la incidencia
     if (empty($errores)) {
         $incidenciaRegistrada = mostrarIncidencia($datos);
     }
@@ -33,7 +32,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <title>Ejercicio 3 - Registro de Incidencias</title>
-    <!-- Bootstrap CDN -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="estilos.css">
 </head>
@@ -42,14 +40,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <div class="container" style="max-width: 750px;">
     <div class="card shadow-sm mb-4">
         <div class="card-header bg-warning text-dark fw-bold">
-            <h4 class="mb-0">Soporte Técnico - Registro de Incidencias</h4>
+            <h4 class="mb-0">Registro de Incidencias</h4>
         </div>
         <div class="card-body">
 
-            <!-- MOSTRAR ERRORES DE VALIDACIÓN -->
+            <!-- Lista de errores si algo falla -->
             <?php if (!empty($errores)): ?>
                 <div class="alert alert-danger">
-                    <h5 class="alert-heading">Se encontraron los siguientes errores:</h5>
+                    <h5 class="alert-heading">Errores detectados:</h5>
                     <ul class="mb-0">
                         <?php foreach ($errores as $err): ?>
                             <li><?= htmlspecialchars($err) ?></li>
@@ -58,10 +56,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
             <?php endif; ?>
 
-            <!-- MOSTRAR INCIDENCIA REGISTRADA CON ÉXITO -->
+            <!-- Resultado verde cuando todo esta bien -->
             <?php if ($incidenciaRegistrada): ?>
-                <div class="alert alert-success border-success">
-                    <h4 class="alert-heading text-uppercase font-monospace fw-bold">INCIDENCIA REGISTRADA</h4>
+                <div class="alert alert-success">
+                    <h4 class="alert-heading font-monospace fw-bold">INCIDENCIA REGISTRADA</h4>
                     <hr>
                     <p class="mb-1"><strong>ID:</strong> <?= $incidenciaRegistrada['id'] ?></p>
                     <p class="mb-1"><strong>Fecha:</strong> <?= $incidenciaRegistrada['fecha'] ?></p>
@@ -76,7 +74,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
             <?php endif; ?>
 
-            <!-- FORMULARIO DE REGISTRO -->
+            <!-- Formulario POST -->
             <form method="POST" action="index.php">
                 <div class="row">
                     <div class="col-md-6 mb-3">
