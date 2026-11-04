@@ -1,6 +1,8 @@
 <?php
+// Cargo las funciones de validacion
 require_once 'funciones.php';
 
+// Creo variables vacias para guardar lo que escriba el usuario
 $datos = [
     'nombre' => '',
     'categoria' => '',
@@ -11,12 +13,14 @@ $datos = [
 $errores = [];
 $exito = false;
 
+// Solo se activa cuando se envia el formulario (POST)
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $datos = $_POST;
     
-    // Validar en servidor mediante PHP
+    // Compruebo los fallos con la funcion en PHP (servidor)
     $errores = validarProducto($datos);
 
+    // Si la lista de errores esta vacia, marcamos exito como verdadero
     if (empty($errores)) {
         $exito = true;
     }
@@ -39,10 +43,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
         <div class="card-body">
 
-            <!-- ERROR DE VALIDACIÓN (CAPTURA 2) -->
+            <!-- Si hay errores muestro la caja roja -->
             <?php if (!empty($errores)): ?>
                 <div class="alert alert-danger">
-                    <h5 class="alert-heading">Revisa los siguientes errores:</h5>
+                    <h5 class="alert-heading">Se han encontrado errores:</h5>
                     <ul class="mb-0">
                         <?php foreach ($errores as $err): ?>
                             <li><?= htmlspecialchars($err) ?></li>
@@ -51,7 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
             <?php endif; ?>
 
-            <!-- ALTA CORRECTA (CAPTURA 3) -->
+            <!-- Si se guardo bien muestro la caja verde -->
             <?php if ($exito): ?>
                 <div class="alert alert-success">
                     <h4 class="alert-heading">PRODUCTO REGISTRADO CORRECTAMENTE</h4>
@@ -64,10 +68,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
             <?php endif; ?>
 
-            <!-- FORMULARIO DE ALTA (POST) -->
+            <!-- Formulario enviando por POST -->
             <form method="POST" action="nuevo.php">
                 <div class="mb-3">
                     <label class="form-label">Nombre del producto *</label>
+                    <!-- Mantengo el texto escrito si falla con value -->
                     <input type="text" name="nombre" class="form-control" value="<?= htmlspecialchars($datos['nombre']) ?>" required>
                 </div>
 
@@ -84,6 +89,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label class="form-label">Precio (€) *</label>
+                        <!-- Validaciones HTML5: min mayores que cero y paso decimal -->
                         <input type="number" step="0.01" min="0.01" name="precio" class="form-control" value="<?= htmlspecialchars($datos['precio']) ?>" required>
                     </div>
                     <div class="col-md-6 mb-3">

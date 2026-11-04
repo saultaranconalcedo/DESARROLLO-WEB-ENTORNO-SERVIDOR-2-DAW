@@ -1,26 +1,25 @@
 # Reto Tema 3: Gestión y Catálogo de Productos Informáticos
 
-## Objetivo de la aplicación
-Aplicación web interna para la administración de un catálogo de productos informáticos. Permite dar de alta nuevos productos y realizar búsquedas filtradas sobre la lista existente.
+## Objetivo
+Aplicación interna básica desarrollada en PHP para administrar un catálogo de productos informáticos.
 
 ## Estructura del proyecto
-- `index.php`: Portada principal del sistema.
-- `productos.php`: Listado general con buscador por GET.
-- `nuevo.php`: Formulario de alta mediante POST.
-- `detalle.php`: Ficha detallada de un producto individual por ID.
-- `funciones.php`: Funciones de validación, filtrado y búsqueda.
+- `index.php`: Página de inicio con accesos principales.
+- `productos.php`: Listado completo con buscador por método GET.
+- `nuevo.php`: Formulario para dar de alta un producto por método POST.
+- `detalle.php`: Vista individual detallada de un producto por ID.
+- `funciones.php`: Funciones para validar, filtrar y consultar productos.
 - `datos.php`: Array inicial con la base de datos simulada.
-- `estilos.css`: Estilos visuales complementarios.
-- `README.md`: Documentación del proyecto.
+- `estilos.css`: Ajustes CSS adicionales.
 
-## Diferencias entre peticiones GET y POST
-- **GET (`productos.php` / `detalle.php`)**: Se utiliza para enviar datos de consulta visibles en la URL (ej. `productos.php?categoria=Monitores`). Permite compartir la URL con filtros activos o marcadores.
-- **POST (`nuevo.php`)**: Se utiliza para enviar datos de formulario de manera oculta en el cuerpo de la petición. Ideal para la creación de registros sin exponer datos en la URL.
+## Diferencias entre GET y POST
+- **GET (`productos.php` / `detalle.php`)**: Envía los datos visibles en la propia URL. Se usa para búsquedas y consultas para poder compartir enlaces directos.
+- **POST (`nuevo.php`)**: Envía los datos ocultos en la petición HTTP. Se utiliza para enviar formularios con información que se va a procesar en el servidor.
 
-## Validaciones realizadas
-- **Cliente (HTML5)**: Uso de atributos `required`, `type="number"`, `min` y `step`.
-- **Servidor (PHP)**: Comprobación de campos no vacíos, precio numérico mayor que cero y stock entero mayor o igual que cero.
+## Validaciones
+- **En cliente**: Realizadas con los atributos `required`, `type`, `min` y `step` de HTML5.
+- **En servidor**: Comprobadas en PHP asegurando campos no vacíos, precio numérico mayor que 0 y stock mayor o igual a 0.
 
-## Mejoras futuras
-- TODO: Conectar con una base de datos MySQL mediante PDO.
-- TODO: Permitir la subida e inclusión de imágenes para cada producto.
+## Tareas pendientes
+- TODO: Conectar la aplicación con una base de datos MySQL mediante PDO.
+- TODO: Permitir la opción de editar y borrar productos existentes.

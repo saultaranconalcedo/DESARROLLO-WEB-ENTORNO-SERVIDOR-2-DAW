@@ -1,5 +1,5 @@
 <?php
-// Array con el catalogo inicial de productos
+// Array simple con los productos iniciales que tenemos de prueba
 $productos = [
     [
         'id' => 1,
@@ -7,7 +7,7 @@ $productos = [
         'categoria' => 'Portátiles',
         'precio' => 799.00,
         'stock' => 12,
-        'descripcion' => 'Portátil i5 con 16GB RAM y 512GB SSD ideal para trabajo diario.'
+        'descripcion' => 'Portátil con procesador i5, 16GB de RAM y disco duro SSD de 512GB.'
     ],
     [
         'id' => 2,
@@ -15,7 +15,7 @@ $productos = [
         'categoria' => 'Monitores',
         'precio' => 249.00,
         'stock' => 8,
-        'descripcion' => 'Monitor IPS Full HD de 27 pulgadas a 75Hz.'
+        'descripcion' => 'Pantalla Full HD de 27 pulgadas con panel IPS.'
     ],
     [
         'id' => 3,
@@ -23,6 +23,6 @@ $productos = [
         'categoria' => 'Periféricos',
         'precio' => 49.00,
         'stock' => 25,
-        'descripcion' => 'Teclado mecánico inalámbrico silencioso.'
+        'descripcion' => 'Teclado inalámbrico con pulsación silenciosa.'
     ]
 ];
