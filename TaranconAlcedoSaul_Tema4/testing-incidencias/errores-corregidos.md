@@ -1,15 +1,15 @@
-# Errores corregidos durante la depuración
+# Informe de Depuración de Errores
 
-## Error 1: se podía abrir una página restringida conociendo su URL
+## ERROR Nº 1
+- **Descripción:** El usuario cliente podía ver la lista de todos los usuarios poniendo `usuarios.php` arriba en el navegador.
+- **Causa:** No se estaba comprobando el rol del usuario en la parte superior del archivo.
+- **Solución aplicada:** Añadido `comprobarRolPermitido(['Administrador']);` al principio.
+- **Prueba realizada:** Entrar como `cliente01` e ir a `usuarios.php`.
+- **Resultado:** CORRECTO (Sale el error 403).
 
-- **Descripción:** ocultar el enlace de usuarios no impedía que un técnico o cliente accediera escribiendo `usuarios.php` en el navegador.
-- **Causa:** la protección estaba únicamente en la interfaz.
-- **Solución aplicada:** `usuarios.php` llama a `comprobarRolPermitido(['Administrador'])`; la función responde con HTTP 403 y detiene la ejecución cuando el rol no está autorizado.
-- **Prueba realizada:** sesión de técnico solicitando directamente `usuarios.php`; respuesta HTTP 403 y pantalla de error. **Resultado: CORRECTO**.
-
-## Error 2: un cliente podía editar la incidencia de otro cliente
-
-- **Descripción:** modificar el identificador de la incidencia en la URL permitía intentar editar un ticket ajeno.
-- **Causa:** no se contrastaba el propietario del ticket con el usuario autenticado en el servidor.
-- **Solución aplicada:** antes de mostrar o procesar el formulario, `editar-incidencia.php` comprueba la propiedad de la incidencia y devuelve HTTP 403 si el cliente no es su propietario.
-- **Prueba realizada:** sesión de `cliente02` intentando abrir la incidencia #1, asignada a `cliente01`; respuesta HTTP 403 y ningún dato modificado. **Resultado: CORRECTO**.
+## ERROR Nº 2
+- **Descripción:** Al crear una nueva incidencia el ID salía duplicado.
+- **Causa:** El conteo del array no sumaba bien la clave siguiente.
+- **Solución aplicada:** Cambiado a `$nuevoId = count($todas) + 1;`.
+- **Prueba realizada:** Crear dos incidencias seguidas.
+- **Resultado:** CORRECTO.

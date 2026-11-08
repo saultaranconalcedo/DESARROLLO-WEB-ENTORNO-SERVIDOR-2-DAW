@@ -2,50 +2,39 @@
 require_once 'funciones.php';
 requerirLogin();
 
-$id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
-$incidencia = $id ? buscarIncidencia($id) : null;
-if ($incidencia === null) {
-    http_response_code(404);
-    exit('Incidencia no encontrada.');
+$id = $_GET['id'] ?? null;
+$todas = cargarIncidencias();
+
+if (!$id || !isset($todas[$id])) {
+    header('Location: incidencias.php');
+    exit;
 }
 
-$rol = $_SESSION['rol'];
-$usuario = $_SESSION['usuario'];
-if (($rol === 'Cliente' && $incidencia['cliente'] !== $usuario)
-    || ($rol === 'Técnico' && $incidencia['tecnico'] !== $usuario)
-    || !in_array($rol, ['Administrador', 'Técnico', 'Cliente'], true)) {
-    mostrarError403();
-}
-$puedeEditar = $rol === 'Administrador' || $rol === 'Cliente'
-    || ($rol === 'Técnico' && $incidencia['tecnico'] === $usuario);
+$inc = $todas[$id];
 ?>
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Detalle de incidencia #<?= (int) $id ?></title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="estilos.css">
+    <title>Detalle Incidencia</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body>
-<main class="container py-4">
-    <div class="card shadow-sm">
-        <div class="card-header"><h1 class="h4 mb-0">Incidencia #<?= (int) $id ?>: <?= escapar($incidencia['titulo']) ?></h1></div>
-        <div class="card-body">
-            <dl class="row">
-                <dt class="col-sm-3">Descripción</dt><dd class="col-sm-9"><?= nl2br(escapar($incidencia['descripcion'])) ?></dd>
-                <dt class="col-sm-3">Cliente</dt><dd class="col-sm-9"><?= escapar($incidencia['cliente']) ?></dd>
-                <dt class="col-sm-3">Técnico</dt><dd class="col-sm-9"><?= escapar($incidencia['tecnico'] ?: 'Sin asignar') ?></dd>
-                <dt class="col-sm-3">Prioridad</dt><dd class="col-sm-9"><?= escapar($incidencia['prioridad']) ?></dd>
-                <dt class="col-sm-3">Estado</dt><dd class="col-sm-9"><?= escapar($incidencia['estado']) ?></dd>
-                <dt class="col-sm-3">Fecha</dt><dd class="col-sm-9"><?= escapar($incidencia['fecha']) ?></dd>
-                <dt class="col-sm-3">Observaciones</dt><dd class="col-sm-9"><?= nl2br(escapar($incidencia['observaciones'])) ?: 'Sin observaciones' ?></dd>
-            </dl>
-            <?php if ($puedeEditar): ?><a class="btn btn-primary" href="editar-incidencia.php?id=<?= (int) $id ?>">Editar</a><?php endif; ?>
-            <a class="btn btn-outline-secondary" href="incidencias.php">Volver a incidencias</a>
-        </div>
+<body class="p-4 bg-light">
+
+<div class="container" style="max-width: 500px;">
+    <div class="card p-3">
+        <h3>Detalle de la Incidencia #<?= $id ?></h3>
+        <p><b>Título:</b> <?= htmlspecialchars($inc['titulo']) ?></p>
+        <p><b>Cliente:</b> <?= htmlspecialchars($inc['cliente']) ?></p>
+        <p><b>Técnico:</b> <?= htmlspecialchars($inc['tecnico']) ?></p>
+        <p><b>Prioridad:</b> <?= $inc['prioridad'] ?></p>
+        <p><b>Estado:</b> <?= $inc['estado'] ?></p>
+        <hr>
+        <p><b>Descripción:</b><br><?= htmlspecialchars($inc['descripcion']) ?></p>
+        <p><b>Observaciones:</b><br><?= htmlspecialchars($inc['observaciones'] ?: 'Sin observaciones') ?></p>
+        <a href="incidencias.php" class="btn btn-secondary">Volver</a>
     </div>
-</main>
+</div>
+
 </body>
 </html>
