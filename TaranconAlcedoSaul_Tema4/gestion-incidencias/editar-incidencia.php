@@ -1,96 +1,65 @@
 <?php
 require_once 'funciones.php';
-comprobarRolPermitido(['Administrador', 'Técnico', 'Cliente']);
+requerirLogin();
 
-$id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
-$incidencia = $id ? buscarIncidencia($id) : null;
-if ($incidencia === null) {
-    http_response_code(404);
-    exit('Incidencia no encontrada.');
+$id = $_GET['id'] ?? null;
+$todas = cargarIncidencias();
+
+if (!$id || !isset($todas[$id])) {
+    header('Location: incidencias.php');
+    exit;
 }
 
-$rol = $_SESSION['rol'];
-$usuario = $_SESSION['usuario'];
-if (($rol === 'Cliente' && $incidencia['cliente'] !== $usuario)
-    || ($rol === 'Técnico' && $incidencia['tecnico'] !== $usuario)) {
-    mostrarError403();
-}
+$inc = $todas[$id];
 
-$estados = ['Abierta', 'En proceso', 'Resuelta', 'Cerrada'];
-$prioridades = ['Baja', 'Media', 'Alta'];
-$errores = [];
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $estado = $_POST['estado'] ?? '';
-    $prioridad = $_POST['prioridad'] ?? '';
-    $observaciones = trim($_POST['observaciones'] ?? '');
+    $inc['estado'] = $_POST['estado'];
+    $inc['prioridad'] = $_POST['prioridad'];
+    $inc['observaciones'] = $_POST['observaciones'];
 
-    if (!in_array($estado, $estados, true)) {
-        $errores[] = 'Selecciona un estado válido.';
-    }
-    if (!in_array($prioridad, $prioridades, true)) {
-        $errores[] = 'Selecciona una prioridad válida.';
-    }
-
-    if ($errores === []) {
-        foreach ($_SESSION['incidencias'] as &$registro) {
-            if ((int) $registro['id'] === $id) {
-                $registro['estado'] = $estado;
-                $registro['prioridad'] = $prioridad;
-                $registro['observaciones'] = $observaciones;
-                break;
-            }
-        }
-        unset($registro);
-        header('Location: detalle-incidencia.php?id=' . $id);
-        exit;
-    }
-    $incidencia['estado'] = $estado;
-    $incidencia['prioridad'] = $prioridad;
-    $incidencia['observaciones'] = $observaciones;
+    $todas[$id] = $inc;
+    guardarIncidencias($todas);
+    header('Location: incidencias.php');
+    exit;
 }
 ?>
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Editar incidencia #<?= (int) $id ?></title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="estilos.css">
+    <title>Editar Incidencia</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body>
-<main class="container py-4">
-    <div class="card shadow-sm mx-auto" style="max-width: 760px">
-        <div class="card-header"><h1 class="h4 mb-0">Editar incidencia #<?= (int) $id ?></h1></div>
-        <div class="card-body">
-            <?php if ($errores !== []): ?><div class="alert alert-danger"><?= escapar(implode(' ', $errores)) ?></div><?php endif; ?>
-            <p><strong><?= escapar($incidencia['titulo']) ?></strong></p>
-            <form method="post" action="editar-incidencia.php?id=<?= (int) $id ?>">
-                <div class="mb-3">
-                    <label class="form-label" for="estado">Estado</label>
-                    <select class="form-select" id="estado" name="estado">
-                        <?php foreach ($estados as $estado): ?>
-                            <option value="<?= escapar($estado) ?>" <?= $incidencia['estado'] === $estado ? 'selected' : '' ?>><?= escapar($estado) ?></option>
-                        <?php endforeach; ?>
-                    </select>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label" for="prioridad">Prioridad</label>
-                    <select class="form-select" id="prioridad" name="prioridad">
-                        <?php foreach ($prioridades as $prioridad): ?>
-                            <option value="<?= escapar($prioridad) ?>" <?= $incidencia['prioridad'] === $prioridad ? 'selected' : '' ?>><?= escapar($prioridad) ?></option>
-                        <?php endforeach; ?>
-                    </select>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label" for="observaciones">Observaciones</label>
-                    <textarea class="form-control" id="observaciones" name="observaciones" rows="4"><?= escapar($incidencia['observaciones']) ?></textarea>
-                </div>
-                <button class="btn btn-primary" type="submit">Guardar cambios</button>
-                <a class="btn btn-outline-secondary" href="detalle-incidencia.php?id=<?= (int) $id ?>">Cancelar</a>
-            </form>
+<body class="p-4 bg-light">
+
+<div class="container" style="max-width: 500px;">
+    <h3>Editar Incidencia #<?= $id ?></h3>
+
+    <form method="POST">
+        <div class="mb-2">
+            <label>Estado:</label>
+            <select name="estado" class="form-select">
+                <option value="Pendiente" <?= $inc['estado'] == 'Pendiente' ? 'selected' : '' ?>>Pendiente</option>
+                <option value="En proceso" <?= $inc['estado'] == 'En proceso' ? 'selected' : '' ?>>En proceso</option>
+                <option value="Resuelta" <?= $inc['estado'] == 'Resuelta' ? 'selected' : '' ?>>Resuelta</option>
+            </select>
         </div>
-    </div>
-</main>
+        <div class="mb-2">
+            <label>Prioridad:</label>
+            <select name="prioridad" class="form-select">
+                <option value="Baja" <?= $inc['prioridad'] == 'Baja' ? 'selected' : '' ?>>Baja</option>
+                <option value="Media" <?= $inc['prioridad'] == 'Media' ? 'selected' : '' ?>>Media</option>
+                <option value="Alta" <?= $inc['prioridad'] == 'Alta' ? 'selected' : '' ?>>Alta</option>
+            </select>
+        </div>
+        <div class="mb-2">
+            <label>Observaciones:</label>
+            <textarea name="observaciones" class="form-control"><?= htmlspecialchars($inc['observaciones']) ?></textarea>
+        </div>
+        <button type="submit" class="btn btn-warning mt-2">Guardar cambios</button>
+        <a href="incidencias.php" class="btn btn-secondary mt-2">Volver</a>
+    </form>
+</div>
+
 </body>
 </html>
