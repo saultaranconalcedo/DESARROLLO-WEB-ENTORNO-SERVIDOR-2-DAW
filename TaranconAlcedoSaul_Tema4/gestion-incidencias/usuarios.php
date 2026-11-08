@@ -1,6 +1,6 @@
 <?php
 require_once 'funciones.php';
-// Solo entra el admin
+// Solo puede entrar el  Admin
 comprobarRolPermitido(['Administrador']);
 
 $usuarios = obtenerUsuarios();
@@ -15,7 +15,7 @@ $usuarios = obtenerUsuarios();
 <body class="p-4 bg-light">
 
 <div class="container" style="max-width: 600px;">
-    <h3>Gestión de Usuarios</h3>
+    <h3>Gestión de Usuarios (Zona Admin)</h3>
     <table class="table table-bordered bg-white">
         <thead>
             <tr><th>Usuario</th><th>Nombre</th><th>Rol</th></tr>
