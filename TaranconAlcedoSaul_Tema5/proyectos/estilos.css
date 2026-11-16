@@ -1,0 +1,12 @@
+body {
+    background-color: #f8f9fa;
+}
+
+.contenedor-principal {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.tarjeta-detalle {
+    border-left: 5px solid #0d6efd;
+}
