@@ -13,13 +13,13 @@ function obtenerProyecto($proyectos, $id) {
 
 // 2. Filtra la lista segun el estado que elija el usuario en el desplegable
 function filtrarPorEstado($proyectos, $estado) {
-    if ($estado === "" || $estado === "Todos") {
+    if ($estado == "" || $estado == "Todos") {
         return $proyectos;
     }
 
     $resultado = [];
     foreach ($proyectos as $p) {
-        if ($p["estado"] === $estado) {
+        if ($p["estado"] == $estado) {
             $resultado[] = $p;
         }
     }

@@ -1,5 +1,5 @@
 <?php
-// Capa de Datos: Aqui tenemos guardados los proyectos de la empresa
+// Aqui tenemos guardados los proyectos de la empresa
 
 function obtenerProyectos() {
     return [

@@ -14,7 +14,7 @@ $proyectosFiltrados = filtrarPorEstado($proyectos, $estadoFiltro);
 $idVer = $_GET['id'] ?? null;
 $proyectoDetalle = null;
 
-if ($idVer !== null) {
+if ($idVer != null) {
     $proyectoDetalle = obtenerProyecto($proyectos, $idVer);
 }
 ?>
@@ -27,65 +27,55 @@ if ($idVer !== null) {
     <link rel="stylesheet" href="estilos.css">  <!-- Cargo mi hoja de estilos propia -->
 </head>
 
-<body class="p-4">
+<body>
 
-<div class="container contenedor-principal">
-    <h2 class="mb-4">Panel de Gestión de Proyectos</h2>
+<div class="caja-principal">
+    <h2>Panel de Gestión de Proyectos</h2>
+    <hr>
 
     <!-- Filtro por estado usando GET -->
-    <form method="GET" action="index.php" class="row g-2 mb-4 align-items-center bg-white p-3 border rounded">
-        <div class="col-auto">
-            <label class="col-form-label fw-bold">Filtrar por estado:</label>
-        </div>
+    <form method="GET" action="index.php" class="mb-4">
+        <label><b>Filtrar por estado:</b></label>
 
-        <div class="col-auto">
-            <select name="estado" class="form-select">
-                <option value="Todos" <?= $estadoFiltro === 'Todos' ? 'selected' : '' ?>>Todos</option>
-                <option value="Planificado" <?= $estadoFiltro === 'Planificado' ? 'selected' : '' ?>>Planificado</option>
-                <option value="En desarrollo" <?= $estadoFiltro === 'En desarrollo' ? 'selected' : '' ?>>En desarrollo</option>
-                <option value="En pruebas" <?= $estadoFiltro === 'En pruebas' ? 'selected' : '' ?>>En pruebas</option>
-                <option value="Finalizado" <?= $estadoFiltro === 'Finalizado' ? 'selected' : '' ?>>Finalizado</option>
-            </select>
-        </div>
+        <select name="estado">
+            <option value="Todos" <?php if($estadoFiltro == 'Todos') echo 'selected'; ?>>Todos</option>
+            <option value="Planificado" <?php if($estadoFiltro == 'Planificado') echo 'selected'; ?>>Planificado</option>
+            <option value="En desarrollo" <?php if($estadoFiltro == 'En desarrollo') echo 'selected'; ?>>En desarrollo</option>
+            <option value="En pruebas" <?php if($estadoFiltro == 'En pruebas') echo 'selected'; ?>>En pruebas</option>
+            <option value="Finalizado" <?php if($estadoFiltro == 'Finalizado') echo 'selected'; ?>>Finalizado</option>
+        </select>
 
-        <div class="col-auto">
-            <button type="submit" class="btn btn-primary">Filtrar</button>
-        </div>
+        <button type="submit" class="btn btn-primary btn-sm">Filtrar</button>
     </form>
 
     <!-- Si han pulsado en ver detalle muestro la tarjeta con la info completa -->
-    <?php if ($proyectoDetalle !== null): ?>
+    <?php if ($proyectoDetalle != null): ?>
         <?php 
             $progreso = calcularProgreso($proyectoDetalle['horas_estimadas'], $proyectoDetalle['horas_realizadas']); 
         ?>
 
-        <div class="card mb-4 tarjeta-detalle">
-            <div class="card-header bg-primary text-white d-flex justify-content-between">
-                <span>Detalle del Proyecto #<?= $proyectoDetalle['id'] ?></span>
-                <a href="index.php?estado=<?= urlencode($estadoFiltro) ?>" class="btn btn-sm btn-light">Cerrar</a>
-            </div>
+        <div class="ficha-detalle">
+            <h4>Detalle del Proyecto #<?= $proyectoDetalle['id'] ?></h4>
+            <p><b>Nombre:</b> <?= $proyectoDetalle['nombre'] ?></p>
+            <p><b>Cliente:</b> <?= $proyectoDetalle['cliente'] ?></p>
+            <p><b>Estado:</b> <?= $proyectoDetalle['estado'] ?></p>
+            <p><b>Horas estimadas:</b> <?= $proyectoDetalle['horas_estimadas'] ?> h</p>
+            <p><b>Horas realizadas:</b> <?= $proyectoDetalle['horas_realizadas'] ?> h</p>
+            <p><b>Porcentaje de ejecución:</b> <?= $progreso ?>%</p>
 
-            <div class="card-body">
-                <h5 class="card-title"><?= htmlspecialchars($proyectoDetalle['nombre']) ?></h5>
-                <p class="mb-1"><b>Cliente:</b> <?= htmlspecialchars($proyectoDetalle['cliente']) ?></p>
-                <p class="mb-1"><b>Estado:</b> <?= $proyectoDetalle['estado'] ?></p>
-                <p class="mb-1"><b>Horas estimadas:</b> <?= $proyectoDetalle['horas_estimadas'] ?> h</p>
-                <p class="mb-1"><b>Horas realizadas:</b> <?= $proyectoDetalle['horas_realizadas'] ?> h</p>
-                <p class="mb-2"><b>Porcentaje de ejecución:</b> <?= $progreso ?>%</p>
+            <!-- Alerta en rojo si se pasan de las horas previstas -->
+            <?php if ($proyectoDetalle['horas_realizadas'] > $proyectoDetalle['horas_estimadas']): ?>
+                <div class="alert alert-danger">
+                    Las horas realizadas superan a las horas previstas.
+                </div>
+            <?php endif; ?>
 
-                <!-- Alerta en rojo si se pasan de las horas previstas -->
-                <?php if ($proyectoDetalle['horas_realizadas'] > $proyectoDetalle['horas_estimadas']): ?>
-                    <div class="alert alert-danger mb-0">
-                        Las horas realizadas superan a las horas previstas.
-                    </div>
-                    
-                <?php endif; ?>
-            </div>
+            <a href="index.php?estado=<?= $estadoFiltro ?>" class="btn btn-secondary btn-sm">Cerrar</a>
         </div>
     <?php endif; ?>
 
     <!-- Tabla principal de proyectos -->
-    <table class="table table-bordered table-hover bg-white">
+    <table class="table table-bordered">
         <thead class="table-dark">
             <tr>
                 <th>ID</th>
@@ -99,24 +89,24 @@ if ($idVer !== null) {
         <tbody>
             <?php if (empty($proyectosFiltrados)): ?>
                 <tr>
-                    <td colspan="6" class="text-center">No hay proyectos en este estado.</td>
+                    <td colspan="6">No hay proyectos en este estado.</td>
                 </tr>
             <?php else: ?>
                 <?php foreach ($proyectosFiltrados as $p): ?>
                     <?php $porcentaje = calcularProgreso($p['horas_estimadas'], $p['horas_realizadas']); ?>
                     <tr>
                         <td><?= $p['id'] ?></td>
-                        <td><?= htmlspecialchars($p['nombre']) ?></td>
-                        <td><?= htmlspecialchars($p['cliente']) ?></td>
+                        <td><?= $p['nombre'] ?></td>
+                        <td><?= $p['cliente'] ?></td>
                         <td><?= $p['estado'] ?></td>
                         <td>
                             <?= $porcentaje ?>%
                             <?php if ($p['horas_realizadas'] > $p['horas_estimadas']): ?>
-                                <span class="badge bg-danger">Excedido</span>
+                                <span class="text-danger"><b>(Excedido)</b></span>
                             <?php endif; ?>
                         </td>
                         <td>
-                            <a href="index.php?id=<?= $p['id'] ?>&estado=<?= urlencode($estadoFiltro) ?>" class="btn btn-sm btn-info text-white">Ver detalle</a>
+                            <a href="index.php?id=<?= $p['id'] ?>&estado=<?= $estadoFiltro ?>" class="btn btn-info btn-sm">Ver detalle</a>
                         </td>
                     </tr>
                 <?php endforeach; ?>
