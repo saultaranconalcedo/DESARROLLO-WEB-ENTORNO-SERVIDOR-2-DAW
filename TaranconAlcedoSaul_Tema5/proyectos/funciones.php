@@ -1,7 +1,7 @@
 <?php
-// Capa de Logica de Negocio: Aqui van las funciones para procesar los proyectos
+// Aqui van las funciones para procesar los proyectos
 
-// 1. Busca un proyecto concreto por su ID para ver la ficha de detalle
+// Busca un proyecto concreto por su ID para ver los detalles
 function obtenerProyecto($proyectos, $id) {
     foreach ($proyectos as $p) {
         if ($p["id"] == $id) {
@@ -11,7 +11,7 @@ function obtenerProyecto($proyectos, $id) {
     return null;
 }
 
-// 2. Filtra la lista segun el estado que elija el usuario en el desplegable
+// Filtra la lista segun el estado que elija el usuario
 function filtrarPorEstado($proyectos, $estado) {
     if ($estado == "" || $estado == "Todos") {
         return $proyectos;
@@ -26,7 +26,7 @@ function filtrarPorEstado($proyectos, $estado) {
     return $resultado;
 }
 
-// 3. Calcula el porcentaje de ejecucion del proyecto
+// Calcula el porcentaje de ejecucion del proyecto
 function calcularProgreso($estimadas, $realizadas) {
     if ($estimadas <= 0) {
         return 0;

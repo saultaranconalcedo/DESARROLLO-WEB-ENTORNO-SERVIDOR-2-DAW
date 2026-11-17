@@ -24,7 +24,7 @@ if ($idVer != null) {
     <title>Panel de Proyectos</title>
     
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">  <!-- Cargo Bootstrap por CDN -->
-    <link rel="stylesheet" href="estilos.css">  <!-- Cargo mi hoja de estilos propia -->
+    <link rel="stylesheet" href="estilos.css"> 
 </head>
 
 <body>
@@ -68,6 +68,7 @@ if ($idVer != null) {
                 <div class="alert alert-danger">
                     Las horas realizadas superan a las horas previstas.
                 </div>
+
             <?php endif; ?>
 
             <a href="index.php?estado=<?= $estadoFiltro ?>" class="btn btn-secondary btn-sm">Cerrar</a>
@@ -86,6 +87,7 @@ if ($idVer != null) {
                 <th>ACCIÓN</th>
             </tr>
         </thead>
+        
         <tbody>
             <?php if (empty($proyectosFiltrados)): ?>
                 <tr>
