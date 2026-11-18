@@ -1,12 +1,15 @@
 <?php
 
+// Indico el namespace de la carpeta para que codeigniter encuentre esta clase
 namespace App\Models;
 
+// Importo la clase model para poder heredar de ella
 use CodeIgniter\Model;
 
+// En CodeIgniter el Modelo se encarga de los datos y de las funciones que los procesan 
 class ProyectoModel extends Model {
 
-    // Aqui tenemos guardados los proyectos de la empresa
+    // Aqui tengo guardados los proyectos de la empresa (le pongo public porque ahora es un metodo de clase)
     public function obtenerProyectos() {
         return [
             [
@@ -43,8 +46,6 @@ class ProyectoModel extends Model {
             ]
         ];
     }
-
-    // Aqui van las funciones para procesar los proyectos
 
     // Busca un proyecto concreto por su ID para ver los detalles
     public function obtenerProyecto($proyectos, $id) {
