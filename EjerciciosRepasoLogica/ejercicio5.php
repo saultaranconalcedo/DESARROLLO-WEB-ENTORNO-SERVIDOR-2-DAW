@@ -1,18 +1,28 @@
 <?php
 function contarVocales($palabra)
 {
-    $cantidad_vocales = array("a" => 0, "e" => 0, "i" => 0, "o" => 0, "u" => 0);
-    $palabra = strtolower($palabra);
+    $palabra_a_letras = str_split(strtolower($palabra));
+    $a = 0;
+    $e = 0;
+    $i_voc = 0;
+    $o = 0;
+    $u = 0;
 
     for ($i = 0; $i < strlen($palabra); $i++) {
-        if (isset($cantidad_vocales[$palabra[$i]])) {
-            $cantidad_vocales[$palabra[$i]]++;
+        if ($palabra_a_letras[$i] == "a") {
+            $a++;
+        } elseif ($palabra_a_letras[$i] == "e") {
+            $e++;
+        } elseif ($palabra_a_letras[$i] == "i") {
+            $i_voc++;
+        } elseif ($palabra_a_letras[$i] == "o") {
+            $o++;
+        } elseif ($palabra_a_letras[$i] == "u") {
+            $u++;
         }
     }
 
-    return "a: " . $cantidad_vocales["a"] . ", e: " . $cantidad_vocales["e"] .
-        ", i: " . $cantidad_vocales["i"] . ", o: " . $cantidad_vocales["o"] .
-        ", u: " . $cantidad_vocales["u"];
+    return "a: " . $a . ", e: " . $e . ", i: " . $i_voc . ", o: " . $o . ", u: " . $u;
 }
 
 $palabra = "programacion";

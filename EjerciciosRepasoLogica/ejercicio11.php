@@ -1,25 +1,25 @@
 <?php
 function segundaPalabraMasLarga($frase)
 {
-    $palabra_actual = "";
-    $palabra_mas_larga = "";
-    $segunda_palabra_mas_larga = "";
+    $actual = "";
+    $mayor = "";
+    $segunda = "";
 
     for ($i = 0; $i <= strlen($frase); $i++) {
         if ($i < strlen($frase) && $frase[$i] != " ") {
-            $palabra_actual .= $frase[$i];
+            $actual .= $frase[$i];
         } else {
-            if (strlen($palabra_actual) > strlen($palabra_mas_larga)) {
-                $segunda_palabra_mas_larga = $palabra_mas_larga;
-                $palabra_mas_larga = $palabra_actual;
-            } elseif (strlen($palabra_actual) > strlen($segunda_palabra_mas_larga)) {
-                $segunda_palabra_mas_larga = $palabra_actual;
+            if (strlen($actual) > strlen($mayor)) {
+                $segunda = $mayor;
+                $mayor = $actual;
+            } elseif (strlen($actual) > strlen($segunda)) {
+                $segunda = $actual;
             }
-            $palabra_actual = "";
+            $actual = "";
         }
     }
 
-    return $segunda_palabra_mas_larga;
+    return $segunda;
 }
 
 $frase = "PHP es bastante interesante";
